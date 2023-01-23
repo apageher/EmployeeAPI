@@ -16,44 +16,43 @@ namespace EmployeeAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Employee>>> GetAllEmployees()
+        public async Task<ActionResult<ServiceResponse<List<GetEmployeeDto>>>> GetAllEmployees()
         {
-            return Ok(_employeeService.GetAllEmployees());
+            return Ok(await _employeeService.GetAllEmployees());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>>? GetEmployeeById(int id)
+        public async Task<ActionResult<ServiceResponse<GetEmployeeDto>>> GetEmployeeById(int id)
         {
-            var result = _employeeService.GetEmployeeById(id);
-            if (result == null)
-                return NotFound("Employee not found");
-            return Ok(result);
+            return Ok(await _employeeService.GetEmployeeById(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Employee>>> AddEmployee(Employee newEmployee)
+        public async Task<ActionResult<ServiceResponse<List<GetEmployeeDto>>>> AddEmployee(AddEmployeeDto newEmployee)
         {
-            var result = _employeeService.AddEmployee(newEmployee);
-            return Ok(result);
+            return Ok(await _employeeService.AddEmployee(newEmployee));
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<Employee>>> UpdateEmployee(int id, Employee updatedEmployee)
+        public async Task<ActionResult<ServiceResponse<GetEmployeeDto>>> UpdateEmployee(int id, UpdateEmployeeDto updatedEmployee)
         {
-            var result = _employeeService.UpdateEmployee(id, updatedEmployee);
-            if (result == null)
-                return NotFound("Employee not found");
-
-            return Ok(result);
+            var response = await _employeeService.UpdateEmployee(id, updatedEmployee);
+            if( response.Data is null)
+            {
+                return NotFound(response);
+            }           
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Employee>>> DeleteEmployee(int id)
+        public async Task<ActionResult<ServiceResponse<List<GetEmployeeDto>>>> DeleteEmployee(int id)
         {
-            var result = _employeeService.DeleteEmployee(id);
-            if (result == null)
-                return NotFound("Employee not found");
-            return Ok(result);
+            var response = await _employeeService.DeleteEmployee(id);
+            if (response.Data is null)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
         }
     }
 }
